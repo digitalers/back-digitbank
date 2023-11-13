@@ -5,6 +5,8 @@ import ar.digitalers.back_digibank.model.ClienteDTO;
 import ar.digitalers.back_digibank.repos.ClienteRepository;
 import ar.digitalers.back_digibank.util.NotFoundException;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,10 @@ public class ClienteService {
         return clientes.stream()
                 .map(cliente -> mapToDTO(cliente, new ClienteDTO()))
                 .toList();
+    }
+
+    public Optional<Cliente> findByEmail(String email) {
+        return clienteRepository.findByEmail(email);
     }
 
     public ClienteDTO get(final Long id) {
@@ -45,6 +51,11 @@ public class ClienteService {
     }
 
     public void delete(final Long id) {
+        if (!clienteRepository.existsById(id)) {
+            System.out.printf("No existe el usuario con la ID #%d", id);
+            return;
+        }
+
         clienteRepository.deleteById(id);
     }
 
